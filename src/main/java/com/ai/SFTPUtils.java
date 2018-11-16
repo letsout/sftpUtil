@@ -17,10 +17,10 @@ public class SFTPUtils {
 
     private static SFTPUtils instance = null;
 
-    private static String host = "172.17.76.52";
+    private static String host = "172.17.70.222";
     private static int port = 22;
-    private static String username = "sc_13000";
-    private static String password = "iopsIOPS1234!@#$iops30";
+    private static String username = "iopsc2280";
+    private static String password = "iopsc2280_PomP_2018#Euop";
 
     private SFTPUtils() {
     }
@@ -71,7 +71,7 @@ public class SFTPUtils {
 
 
     /**
-     * @param remoteFile 远程文件全路径,路径不能以'/'结尾
+     * @param remoteFile 远程文件全路径
      * @param localFile  本地文件全路径
      * @return
      */
@@ -105,7 +105,7 @@ public class SFTPUtils {
 
     /**
      * @param remotePath 远程路径
-     * @param localPath  本地路径,必须以'/'结尾
+     * @param localPath  本地路径
      * @return
      */
     private void download(String remotePath, String localPath) {
@@ -120,6 +120,13 @@ public class SFTPUtils {
                 System.out.println("该目录下没有文件");
                 return;
             }
+
+            File f=new File(localPath);
+            if (!f.exists()){
+                System.out.println(localPath+" is not exists! creating...");
+                System.out.println(f.mkdirs());
+            }
+
             sftp.cd(remotePath);
             for (ChannelSftp.LsEntry file : files) {
                 String fileName = file.getFilename();
@@ -160,12 +167,10 @@ public class SFTPUtils {
             dirPath.append(str + "/");
             String dir = dirPath.toString();
             //目录是否存在
-            if (isDirExit(dir)) {
-                sftp.cd(dir);
-            } else {
+            if (!isDirExit(dir)) {
                 sftp.mkdir(dir);
-                sftp.cd(dir);
             }
+            sftp.cd(dir);
         }
     }
 
@@ -182,9 +187,8 @@ public class SFTPUtils {
 
     /**
      * @param args 0:d(下载)/u(上传) 1:remotePath 2:localPath
-     * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         if (args.length < 3)
             System.out.println("please input 3 params");
 
